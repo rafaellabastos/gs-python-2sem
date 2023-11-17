@@ -68,7 +68,7 @@ def excluir():
 
 def alterar():
     try:
-        print("----- ALTERAR VACINA -----\n")
+        print("----- ALTERAR INFORMAÇÕES -----\n")
 
         # ID da vacina que será alterado
 
@@ -143,6 +143,29 @@ def consultar():
     except:
         print("Erro na transação do BD...")
 
+def login():
+    """
+    Login do usuário para poder ter acesso as funcionalidades do sistema
+    """
+    logado = False
+    try:
+        print("\nOlá seja bem vindo ao ImunoCheck!" + "\nPor Favor faça o login para continuar:")
+        usuario = input("\nDigite o seu usuário: ")
+        senha = input("Digite sua senha: ")
+
+        verificacao = f"""SELECT * FROM WHERE usuario = '{usuario}' AND senha = '{senha}' """
+        cursor.execute(verificacao)
+        resposta = cursor.fetchall()
+        print(resposta)
+        if resposta:
+            print("Logado com sucesso! Entrando...")
+            logado = True
+        else:
+            print("Usário e/ou senha incorretos! Tente novamente.")
+    except:
+        print("Erro na transação do BD...")
+    return logado
+
 
 def SubMenu():
     """
@@ -153,8 +176,7 @@ def SubMenu():
           '\n2. Excluir vacina'
           '\n3. Alterar informação'
           '\n4. Consultar vacinas'
-          '\n5. Sair'
-          '\n4. Consultar vacinas')
+          '\n5. Sair')
     
     try:
         opcaomenu = int(input('\nSelecione uma das opções acima: '))
@@ -238,7 +260,7 @@ while True:
 
         # Fazer login
         case 2:
-            print('Só para não marcar erro')
+            login()
 
 
         #Apenas verificar vacinas
