@@ -218,6 +218,13 @@ def SubMenu():
 def cadastrar():
     try:
         print("----- CADASTRAR USUÁRIO -----\n")
+        
+        # Recebe os valores para cadastro
+        nome = input("Nome completo: ")
+        idade = int(input("Idade: "))
+        cidade = input("Cidade: ")
+        usuario = input("Nome de usuário: ")
+        senha = pwinput.pwinput("Senha: ")
 
         
 
