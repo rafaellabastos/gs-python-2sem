@@ -218,13 +218,18 @@ def SubMenu():
 def cadastrar():
     try:
         print("----- CADASTRAR USUÁRIO -----\n")
-        
+
         # Recebe os valores para cadastro
         nome = input("Nome completo: ")
         idade = int(input("Idade: "))
         cidade = input("Cidade: ")
         usuario = input("Nome de usuário: ")
         senha = pwinput.pwinput("Senha: ")
+
+        # Monta a instrução SQL de cadastro em uma string
+        cadastro = f"""INSERT INTO sua_tabela (nome_completo, idade, cidade, usuario, senha) 
+                       VALUES ('{nome}', {idade}, '{cidade}', '{usuario}', '{senha}')"""
+
 
         
 
