@@ -233,6 +233,13 @@ def cadastrar():
         # Executa e grava o registro na Tabela
         cursor.execute(cadastro)
         conn.commit()
+        
+    except ValueError:
+        print("Erro: Verifique se a idade foi inserida corretamente.")
+    except Exception as e:
+        print(f"Erro na transação do BD: {e}")
+    else:
+        print("\nUsuário cadastrado com sucesso!")
 
 
         
