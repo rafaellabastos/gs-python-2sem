@@ -153,7 +153,7 @@ def SubMenu():
           '\n2. Excluir vacina'
           '\n3. Alterar informação'
           '\n4. Consultar vacinas'
-          '\n5. Sair')
+          '\n5. Sair'
           '\n4. Consultar vacinas')
     
     try:
