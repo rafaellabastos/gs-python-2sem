@@ -214,6 +214,13 @@ def SubMenu():
         case _:
             print('Opção incorreta')
 
+
+def cadastrar():
+    try:
+        print("----- CADASTRAR USUÁRIO -----\n")
+
+        
+
             
 # Tentativa de conexão com o banco de dados
 try:
@@ -253,11 +260,12 @@ while True:
 
     match opcaomenu:
 
-        # Realizar cadastro
-        case 1:
-            print('Só para não marcar erro')
+# Realizar cadastro
 
 
+
+
+        
         # Fazer login
         case 2:
             login()
