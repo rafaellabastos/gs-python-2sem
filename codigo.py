@@ -154,6 +154,7 @@ def SubMenu():
           '\n3. Alterar informação'
           '\n4. Consultar vacinas'
           '\n5. Sair')
+          '\n4. Consultar vacinas')
     
     try:
         opcaomenu = int(input('\nSelecione uma das opções acima: '))
@@ -182,7 +183,7 @@ def SubMenu():
         case 4:
             print('Só para não marcar erro')
         
-
+        
         #Sair
         case 5:
             print('\nFim de programa. Até a próxima!')  
@@ -191,7 +192,7 @@ def SubMenu():
         case _:
             print('Opção incorreta')
 
-
+            
 # Tentativa de conexão com o banco de dados
 try:
     usuario = input('Usuário: ')
@@ -251,6 +252,6 @@ while True:
             break
 
 
+
         case _:
             print('Opção incorreta!')
-            
