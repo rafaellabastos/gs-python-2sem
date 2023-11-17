@@ -1,10 +1,13 @@
 import oracledb
 import pwinput
-
+from tabulate import tabulate 
 
 def inserir():
+    """
+    Função que insere os dados da vacina
+    """
     try:
-        print("----- CADASTRAR VACINAS -----\n")
+        print("----- CADASTRAR VACINA -----\n")
 
         # Recebe os valores para cadastro
         a = input("VALORES PRA CADASTRO...:")
@@ -29,6 +32,9 @@ def inserir():
 
 
 def excluir():
+    """
+    Função que exclui os dados de uma vacina
+    """
     try:
         print("----- EXCLUIR VACINA -----\n")
 
@@ -67,23 +73,22 @@ def excluir():
 
 
 def alterar():
+    """
+    Função que altera os dados de uma vacina
+    """
     try:
         print("----- ALTERAR INFORMAÇÕES -----\n")
 
         # ID da vacina que será alterado
-
         vac_id = int(input("Escolha um Id: "))
 
         # Constroi a instrução de consulta para verificar a existencia ou não do id
-
         consulta = f"""SELECT * FROM  WHERE ID = {vac_id}"""
 
         # Executa o script SQL no banco de dados
-
         cursor.execute(consulta)
 
         # captura os dados de retorno da consulta
-
         lista_dados = cursor.fetchall()
 
         # Verifica se o registro está cadastrado
@@ -113,29 +118,27 @@ def alterar():
 
 
 def consultar():
+    """
+    Função que permite o usuário verificar suas vacinas
+    """
     try:
-
         print("----- CONSULTAR VACINAS -----\n")
 
         # Monta a instrução SQL de consulta
-
         consulta = f"""SELECT * FROM """
 
         # Executa o script SQL no banco de dados
-
         cursor.execute(consulta)
 
         # captura os dados de retorno da consulta (lista de tuplas)
-
         lista_dados = cursor.fetchall()
 
         # ordena a lista
-
         lista_dados.sort()
 
         # Verifica se há vacinas cadastradas
         if len(lista_dados) == 0:
-            print(f"Não há Vacinas cadastradas!")
+            print(f"Não há vacinas cadastradas!")
         else:
             # exibe os itens da lista
             for item in lista_dados:
@@ -143,13 +146,50 @@ def consultar():
     except:
         print("Erro na transação do BD...")
 
+
+def ApenasVerificar():
+    print('\nOlá, seja bem vindo ao ImunoCheck!')
+    print('\nEstas são as vacinas bases que todo cidadão brasileiro deveria ter: ')
+
+    # Lista com 4 colunas e 19 linhas
+    tabela = [["" for _ in range(4)] for _ in range(19)]
+
+    # Primeira linha como cabeçalho
+    tabela[0] = ["ID", "Nome da vacina", "Proteção", "Quando tomar"]
+
+    # Conteúdo das outras linhas
+    tabela[1] = [1, "BCG", "Tuberculose", "Infância"]
+    tabela[2] = [2, "Hepatite B", "Hepatite B", "Infância"]
+    tabela[3] = [3, "Pentavalente", "DRP, Hib e HBV", "Infância"]
+    tabela[4] = [4, "VIP/VOP", "Poliomelite", "Infância"]
+    tabela[5] = [5, "Pneumocócica", "Doenças pulmonares", "Infância"]
+    tabela[6] = [6, "Meningocócica", "Meningococo", "Infância"]
+    tabela[7] = [7, "Rotavírus", "Rotavírus", "Infância"]
+    tabela[8] = [8, "Tríplice viral", "Sarampo, caxumba e rubéola", "Infância"]
+    tabela[9] = [9, "Hepatite A", "Hepatite A", "Infância"]
+    tabela[10] = [10, "DTP", "Difteria, tétano e coqueluche", "Infância"]
+    tabela[11] = [11, "Varicela", "Catapora", "Infância"]
+    tabela[12] = [12, "Febre amarela", "Febre amarela", "A partir dos 9 meses"]
+    tabela[13] = [13, "HPV", "HPV", "Meninas: 9 anos/ Meninos: 11 anos"]
+    tabela[14] = [14, "Hepatite B", "Hepatite B", "Infância"]
+    tabela[15] = [15, "Tríplice viral", "Sarampo, caxumba e rubéola", "Infância"]
+    tabela[16] = [16, "Tríplice viral", "Sarampo, caxumba e rubéola", "Adulto"]
+    tabela[17] = [17, "Dupla adulto", "Difteria e tétano", "Adulto"]
+    tabela[18] = [18, "Influenza", "Gripe", "Anual"]
+
+    # Formatação e exibição da tabela
+    print(tabulate(tabela, headers="firstrow", tablefmt="fancy_grid"))
+
+
 def login():
     """
     Login do usuário para poder ter acesso as funcionalidades do sistema
     """
     logado = False
     try:
-        print("\nOlá seja bem vindo ao ImunoCheck!" + "\nPor Favor faça o login para continuar:")
+        print("\nOlá, seja bem vindo ao ImunoCheck!" +
+              "\nPor Favor faça o login para continuar:")
+        
         usuario = input("\nDigite o seu usuário: ")
         senha = input("Digite sua senha: ")
 
@@ -157,6 +197,7 @@ def login():
         cursor.execute(verificacao)
         resposta = cursor.fetchall()
         print(resposta)
+        
         if resposta:
             print("Logado com sucesso! Entrando...")
             logado = True
@@ -258,6 +299,7 @@ try:
 except Exception as erro:
     print(f'Erro ao conectar com o banco de dados: ', {erro}) # Exibe o erro
     conexao = False                                           # Mantém a conexão com o banco de dados
+
 else:
     print('Conexão realizada com sucesso!')                   # Exibe a mensagem de sucesso
     conexao = True                                            # Fecha a conexão com o banco de dados
@@ -296,14 +338,13 @@ while True:
 
         #Apenas verificar vacinas
         case 3:
-            print('Só para não marcar erro')
+            ApenasVerificar()
 
 
         #Sair
         case 4:
             print('\nFim de programa. Até a próxima!')
             break
-
 
 
         case _:
