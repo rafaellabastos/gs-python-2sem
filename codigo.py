@@ -3,6 +3,9 @@ import pwinput
 
 
 def inserir():
+    """
+    Função que insere os dados da vacina
+    """
     try:
         print("----- CADASTRAR VACINA -----\n")
 
@@ -29,6 +32,9 @@ def inserir():
 
 
 def excluir():
+    """
+    Função que exclui os dados de uma vacina
+    """
     try:
         print("----- EXCLUIR VACINA -----\n")
 
@@ -67,6 +73,9 @@ def excluir():
 
 
 def alterar():
+    """
+    Função que altera os dados de uma vacina
+    """
     try:
         print("----- ALTERAR INFORMAÇÕES -----\n")
 
@@ -109,6 +118,9 @@ def alterar():
 
 
 def consultar():
+    """
+    Função que permite o usuário verificar suas vacinas
+    """
     try:
         print("----- CONSULTAR VACINAS -----\n")
 
