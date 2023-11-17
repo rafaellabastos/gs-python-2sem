@@ -68,7 +68,7 @@ def excluir():
 
 def alterar():
     try:
-        print("----- ALTERAR VACINA -----\n")
+        print("----- ALTERAR INFORMAÇÕES -----\n")
 
         # ID da vacina que será alterado
 
@@ -153,8 +153,7 @@ def SubMenu():
           '\n2. Excluir vacina'
           '\n3. Alterar informação'
           '\n4. Consultar vacinas'
-          '\n5. Sair'
-          '\n4. Consultar vacinas')
+          '\n5. Sair')
     
     try:
         opcaomenu = int(input('\nSelecione uma das opções acima: '))
