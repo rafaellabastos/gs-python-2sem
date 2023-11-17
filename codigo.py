@@ -1,3 +1,149 @@
+import oracledb
+import pwinput
+
+
+def inserir():
+    try:
+        print("----- CADASTRAR VACINAS -----\n")
+
+        # Recebe os valores para cadastro
+        a = input("VALORES PRA CADASTRO...:")
+        a = input("VALORES PRA CADASTRO...:")
+        a = int(input("VALORES PRA CADASTRO...:"))
+        a = int(input("VALORES PRA CADASTRO...: "))
+        
+
+        # Monta a instrução SQL de cadastro em uma string
+        cadastro = f"""INSERT INTO () VALUES ()"""
+
+        # Executa e grava o registro na Tabela
+        cursor.execute(cadastro)
+        conn.commit()
+
+    except ValueError:
+        print("Digite um número inteiro!")
+    except:
+        print("Erro na transação do BD")
+    else:
+        print("\nDados GRAVADOS com sucesso.")
+
+
+def excluir():
+    try:
+        print("----- EXCLUIR VACINA -----\n")
+
+        # ID da vacina que será excluído
+
+        vac_id = int(input("Escolha um Id: ")) 
+
+        # Monta a instrução SQL de consulta
+
+        consulta = f"""SELECT * FROM  WHERE id = {vac_id}"""
+
+        # Executa o script SQL no banco de dados
+
+        cursor.execute(consulta)
+
+        # captura os dados de retorno da consulta
+
+        lista_dados = cursor.fetchall()
+
+        # Verifica se o registro está cadastrado
+        if len(lista_dados) == 0:
+            print(f"Não há uma vacina cadastrada com o ID = {vac_id}")
+        else:
+            # Cria a instrução SQL de exclusão
+            exclusao = f"""DELETE FROM  WHERE id = {vac_id}""" 
+
+            # Executa a instrução e atualiza a tabela
+            cursor.execute(exclusao)
+            conn.commit()
+    except ValueError:
+        print("Digite um número inteiro para o id!")
+    except Exception:
+        print("Erro na transação do BD")
+    else:
+        print("\nVacina EXCLUÍDA com sucesso.")
+
+
+def alterar():
+    try:
+        print("----- ALTERAR VACINA -----\n")
+
+        # ID da vacina que será alterado
+
+        vac_id = int(input("Escolha um Id: "))
+
+        # Constroi a instrução de consulta para verificar a existencia ou não do id
+
+        consulta = f"""SELECT * FROM  WHERE ID = {vac_id}"""
+
+        # Executa o script SQL no banco de dados
+
+        cursor.execute(consulta)
+
+        # captura os dados de retorno da consulta
+
+        lista_dados = cursor.fetchall()
+
+        # Verifica se o registro está cadastrado
+        if len(lista_dados) == 0:
+            print(f"Não há uma vacinas cadastrada com o ID = {vac_id}")
+        else:
+            # Captura os novos dados
+            novo_ = input("NOVOS DADOS....: ")
+            novo_ = input("NOVOS DADOS....: ")
+            nova_ = int(input("NOVOS DADOS..: "))
+
+            # Constroi a instrução de edição do registro com os novos dados
+            alteracao = f"""UPDATE  SET
+                            a = '{"NOVOS DADOS"}',
+                            a = '{"NOVOS DADOS"}',
+                            a = '{"NOVOS DADOS"}'
+                            WHERE id = {vac_id}"""
+
+            # Executa e altera o registro na Tabela
+            cursor.execute(alteracao)
+            conn.commit()
+            print("\nDados ATUALIZADOS com sucesso!")
+    except ValueError:
+        print("Digite um valor inteiro.")
+    except Exception:
+        print("Erro na transação do BD")
+
+
+def consultar():
+    try:
+
+        print("----- CONSULTAR VACINAS -----\n")
+
+        # Monta a instrução SQL de consulta
+
+        consulta = f"""SELECT * FROM """
+
+        # Executa o script SQL no banco de dados
+
+        cursor.execute(consulta)
+
+        # captura os dados de retorno da consulta (lista de tuplas)
+
+        lista_dados = cursor.fetchall()
+
+        # ordena a lista
+
+        lista_dados.sort()
+
+        # Verifica se há vacinas cadastradas
+        if len(lista_dados) == 0:
+            print(f"Não há Vacinas cadastradas!")
+        else:
+            # exibe os itens da lista
+            for item in lista_dados:
+                print(item)
+    except:
+        print("Erro na transação do BD...")
+
+
 def SubMenu():
     """
     Depois que o usuário realiza login, ele pode ter acesso a sua caderneta
@@ -6,6 +152,8 @@ def SubMenu():
           '\n1. Inserir vacina'
           '\n2. Excluir vacina'
           '\n3. Alterar informação'
+          '\n4. Consultar vacinas'
+          '\n5. Sair')
           '\n4. Consultar vacinas')
     
     try:
@@ -34,10 +182,33 @@ def SubMenu():
         #Consultar vacinas
         case 4:
             print('Só para não marcar erro')
+        
+        
+        #Sair
+        case 5:
+            print('\nFim de programa. Até a próxima!')  
 
         
         case _:
             print('Opção incorreta')
+
+            
+# Tentativa de conexão com o banco de dados
+try:
+    usuario = input('Usuário: ')
+    senha = pwinput.pwinput('Senha: ')
+
+    # Conexão com o banco de dados
+    conn = oracledb.connect(user=usuario, password=senha, host='oracle.fiap.com.br', port=1521, service_name='ORCL')
+    
+    # Criação do cursor
+    cursor = conn.cursor()
+except Exception as erro:
+    print(f'Erro ao conectar com o banco de dados: ', {erro}) # Exibe o erro
+    conexao = False                                           # Mantém a conexão com o banco de dados
+else:
+    print('Conexão realizada com sucesso!')                   # Exibe a mensagem de sucesso
+    conexao = True                                            # Fecha a conexão com o banco de dados
 
 
 while True:
@@ -78,8 +249,9 @@ while True:
         #Sair
         case 4:
             print('\nFim de programa. Até a próxima!')
+            break
+
 
 
         case _:
             print('Opção incorreta!')
-
