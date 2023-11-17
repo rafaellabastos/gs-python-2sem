@@ -1,6 +1,6 @@
 import oracledb
 import pwinput
-
+from tabulate import tabulate 
 
 def inserir():
     """
@@ -146,13 +146,48 @@ def consultar():
     except:
         print("Erro na transação do BD...")
 
+
+def ApenasVerificar():
+    print('\nOlá, seja bem vindo ao ImunoCheck!')
+    print('\nEstas são as vacinas bases que todo cidadão brasileiro deveria ter: ')
+
+    # Lista com 4 colunas e 19 linhas
+    tabela = [["" for _ in range(4)] for _ in range(19)]
+
+    # Primeira linha como cabeçalho
+    tabela[0] = ["ID", "Nome da vacina", "Proteção", "Quando tomar"]
+
+    # Conteúdo das outras linhas
+    tabela[1] = [1, "BCG", "Tuberculose", "Infância"]
+    tabela[2] = [2, "Hepatite B", "Hepatite B", "Infância"]
+    tabela[3] = [3, "Pentavalente", "DRP, Hib e HBV", "Infância"]
+    tabela[4] = [4, "VIP/VOP", "Poliomelite", "Infância"]
+    tabela[5] = [5, "Pneumocócica", "Doenças pulmonares", "Infância"]
+    tabela[6] = [6, "Meningocócica", "Meningococo", "Infância"]
+    tabela[7] = [7, "Rotavírus", "Rotavírus", "Infância"]
+    tabela[8] = [8, "Tríplice viral", "Sarampo, caxumba e rubéola", "Infância"]
+    tabela[9] = [9, "Hepatite A", "Hepatite A", "Infância"]
+    tabela[10] = [10, "DTP", "Difteria, tétano e coqueluche", "Infância"]
+    tabela[11] = [11, "Varicela", "Catapora", "Infância"]
+    tabela[12] = [12, "Febre amarela", "Febre amarela", "A partir dos 9 meses"]
+    tabela[13] = [13, "HPV", "HPV", "Meninas: 9 anos/ Meninos: 11 anos"]
+    tabela[14] = [14, "Hepatite B", "Hepatite B", "Infância"]
+    tabela[15] = [15, "Tríplice viral", "Sarampo, caxumba e rubéola", "Infância"]
+    tabela[16] = [16, "Tríplice viral", "Sarampo, caxumba e rubéola", "Adulto"]
+    tabela[17] = [17, "Dupla adulto", "Difteria e tétano", "Adulto"]
+    tabela[18] = [18, "Influenza", "Gripe", "Anual"]
+
+    # Formatação e exibição da tabela
+    print(tabulate(tabela, headers="firstrow", tablefmt="fancy_grid"))
+
+
 def login():
     """
     Login do usuário para poder ter acesso as funcionalidades do sistema
     """
     logado = False
     try:
-        print("\nOlá seja bem vindo ao ImunoCheck!" +
+        print("\nOlá, seja bem vindo ao ImunoCheck!" +
               "\nPor Favor faça o login para continuar:")
         
         usuario = input("\nDigite o seu usuário: ")
@@ -272,7 +307,7 @@ while True:
 
         #Apenas verificar vacinas
         case 3:
-            print('Só para não marcar erro')
+            ApenasVerificar()
 
 
         #Sair
