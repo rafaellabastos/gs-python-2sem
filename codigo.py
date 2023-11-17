@@ -4,7 +4,7 @@ import pwinput
 
 def inserir():
     try:
-        print("----- CADASTRAR VACINAS -----\n")
+        print("----- CADASTRAR VACINA -----\n")
 
         # Recebe os valores para cadastro
         a = input("VALORES PRA CADASTRO...:")
@@ -71,19 +71,15 @@ def alterar():
         print("----- ALTERAR INFORMAÇÕES -----\n")
 
         # ID da vacina que será alterado
-
         vac_id = int(input("Escolha um Id: "))
 
         # Constroi a instrução de consulta para verificar a existencia ou não do id
-
         consulta = f"""SELECT * FROM  WHERE ID = {vac_id}"""
 
         # Executa o script SQL no banco de dados
-
         cursor.execute(consulta)
 
         # captura os dados de retorno da consulta
-
         lista_dados = cursor.fetchall()
 
         # Verifica se o registro está cadastrado
@@ -114,28 +110,23 @@ def alterar():
 
 def consultar():
     try:
-
         print("----- CONSULTAR VACINAS -----\n")
 
         # Monta a instrução SQL de consulta
-
         consulta = f"""SELECT * FROM """
 
         # Executa o script SQL no banco de dados
-
         cursor.execute(consulta)
 
         # captura os dados de retorno da consulta (lista de tuplas)
-
         lista_dados = cursor.fetchall()
 
         # ordena a lista
-
         lista_dados.sort()
 
         # Verifica se há vacinas cadastradas
         if len(lista_dados) == 0:
-            print(f"Não há Vacinas cadastradas!")
+            print(f"Não há vacinas cadastradas!")
         else:
             # exibe os itens da lista
             for item in lista_dados:
@@ -149,7 +140,9 @@ def login():
     """
     logado = False
     try:
-        print("\nOlá seja bem vindo ao ImunoCheck!" + "\nPor Favor faça o login para continuar:")
+        print("\nOlá seja bem vindo ao ImunoCheck!" +
+              "\nPor Favor faça o login para continuar:")
+        
         usuario = input("\nDigite o seu usuário: ")
         senha = input("Digite sua senha: ")
 
@@ -157,6 +150,7 @@ def login():
         cursor.execute(verificacao)
         resposta = cursor.fetchall()
         print(resposta)
+        
         if resposta:
             print("Logado com sucesso! Entrando...")
             logado = True
@@ -228,6 +222,7 @@ try:
 except Exception as erro:
     print(f'Erro ao conectar com o banco de dados: ', {erro}) # Exibe o erro
     conexao = False                                           # Mantém a conexão com o banco de dados
+
 else:
     print('Conexão realizada com sucesso!')                   # Exibe a mensagem de sucesso
     conexao = True                                            # Fecha a conexão com o banco de dados
@@ -272,7 +267,6 @@ while True:
         case 4:
             print('\nFim de programa. Até a próxima!')
             break
-
 
 
         case _:
