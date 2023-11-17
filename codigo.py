@@ -229,6 +229,10 @@ def cadastrar():
         # Monta a instrução SQL de cadastro em uma string
         cadastro = f"""INSERT INTO sua_tabela (nome_completo, idade, cidade, usuario, senha) 
                        VALUES ('{nome}', {idade}, '{cidade}', '{usuario}', '{senha}')"""
+        
+        # Executa e grava o registro na Tabela
+        cursor.execute(cadastro)
+        conn.commit()
 
 
         
