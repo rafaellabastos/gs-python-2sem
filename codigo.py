@@ -10,21 +10,17 @@ def inserir():
         print("----- CADASTRAR VACINA -----\n")
 
         # Recebe os valores para cadastro
-        a = input("VALORES PRA CADASTRO...:")
-        a = input("VALORES PRA CADASTRO...:")
-        a = int(input("VALORES PRA CADASTRO...:"))
-        a = int(input("VALORES PRA CADASTRO...: "))
-        
+        statusVacina = input("Digite o status da vacina...:")
 
         # Monta a instrução SQL de cadastro em uma string
-        cadastro = f"""INSERT INTO () VALUES ()"""
+        cadastro = f"""INSERT INTO VACINASUSUARIO (STATUSVACINA) VALUES ({statusVacina}) """
 
         # Executa e grava o registro na Tabela
         cursor.execute(cadastro)
         conn.commit()
 
     except ValueError:
-        print("Digite um número inteiro!")
+        print("Não são aceitos números!")
     except:
         print("Erro na transação do BD")
     else:
@@ -44,7 +40,7 @@ def excluir():
 
         # Monta a instrução SQL de consulta
 
-        consulta = f"""SELECT * FROM  WHERE id = {vac_id}"""
+        consulta = f"""SELECT * FROM VACINASUSUARIO WHERE id = {vac_id}"""
 
         # Executa o script SQL no banco de dados
 
@@ -69,7 +65,7 @@ def excluir():
     except Exception:
         print("Erro na transação do BD")
     else:
-        print("\nVacina EXCLUÍDA com sucesso.")
+        print("\nInformação da vacina EXCLUÍDA com sucesso.")
 
 
 def alterar():
@@ -83,7 +79,7 @@ def alterar():
         vac_id = int(input("Escolha um Id: "))
 
         # Constroi a instrução de consulta para verificar a existencia ou não do id
-        consulta = f"""SELECT * FROM  WHERE ID = {vac_id}"""
+        consulta = f"""SELECT * FROM VACINASUSUARIO WHERE ID = {vac_id}"""
 
         # Executa o script SQL no banco de dados
         cursor.execute(consulta)
@@ -93,18 +89,14 @@ def alterar():
 
         # Verifica se o registro está cadastrado
         if len(lista_dados) == 0:
-            print(f"Não há uma vacinas cadastrada com o ID = {vac_id}")
+            print(f"Não há uma vacina cadastrada com o ID = {vac_id}")
         else:
             # Captura os novos dados
-            novo_ = input("NOVOS DADOS....: ")
-            novo_ = input("NOVOS DADOS....: ")
-            nova_ = int(input("NOVOS DADOS..: "))
+            novo_statusVacina = input("Digite o novo status da vacina....: ")
 
             # Constroi a instrução de edição do registro com os novos dados
-            alteracao = f"""UPDATE  SET
-                            a = '{"NOVOS DADOS"}',
-                            a = '{"NOVOS DADOS"}',
-                            a = '{"NOVOS DADOS"}'
+            alteracao = f"""UPDATE vacinasUsuario SET
+                            statusVacina = '{novo_statusVacina}'
                             WHERE id = {vac_id}"""
 
             # Executa e altera o registro na Tabela
@@ -112,7 +104,7 @@ def alterar():
             conn.commit()
             print("\nDados ATUALIZADOS com sucesso!")
     except ValueError:
-        print("Digite um valor inteiro.")
+        print("Números não são aceitos.")
     except Exception:
         print("Erro na transação do BD")
 
@@ -125,7 +117,7 @@ def consultar():
         print("----- CONSULTAR VACINAS -----\n")
 
         # Monta a instrução SQL de consulta
-        consulta = f"""SELECT * FROM """
+        consulta = f"""SELECT * FROM VACINAS"""
 
         # Executa o script SQL no banco de dados
         cursor.execute(consulta)
@@ -193,7 +185,7 @@ def login():
         usuario = input("\nDigite o seu usuário: ")
         senha = input("Digite sua senha: ")
 
-        verificacao = f"""SELECT * FROM WHERE usuario = '{usuario}' AND senha = '{senha}' """
+        verificacao = f"""SELECT * FROM CADASTRO WHERE usuario = '{usuario}' AND senha = '{senha}' """
         cursor.execute(verificacao)
         resposta = cursor.fetchall()
         print(resposta)
@@ -202,7 +194,7 @@ def login():
             print("Logado com sucesso! Entrando...")
             logado = True
         else:
-            print("Usário e/ou senha incorretos! Tente novamente.")
+            print("Usuário e/ou senha incorretos! Tente novamente.")
     except:
         print("Erro na transação do BD...")
     return logado
@@ -229,22 +221,22 @@ def SubMenu():
 
         #Inserir vacina
         case 1:
-            print('Só para não marcar erro')
+            inserir()
 
 
         #Excluir vacina
         case 2:
-            print('Só para não marcar erro')
+            excluir()
 
 
         #Alterar informação
         case 3:
-            print('Só para não marcar erro')
+            alterar()
 
 
         #Consultar vacinas
         case 4:
-            print('Só para não marcar erro')
+            consultar()
         
         
         #Sair
@@ -254,6 +246,36 @@ def SubMenu():
         
         case _:
             print('Opção incorreta')
+
+
+def cadastrar():
+    try:
+        print("----- CADASTRAR USUÁRIO -----\n")
+
+        # Recebe os valores para cadastro
+        usuario = input("Nome de usuário: ")
+        nome = input("Nome completo: ")
+        idade = int(input("Idade: "))
+        estado = input("Estado: ")
+        senha = pwinput.pwinput("Senha: ")
+
+        # Monta a instrução SQL de cadastro em uma string
+        cadastro = f"""INSERT INTO CADASTRO (usuario, nomeCompleto, idade, estado, senha) 
+                       VALUES ('{usuario}', '{nome}', '{idade}', '{estado}', '{senha}')"""
+        
+        # Executa e grava o registro na Tabela
+        cursor.execute(cadastro)
+        conn.commit()
+        
+    except ValueError:
+        print("Erro: Verifique se a idade foi inserida corretamente.")
+    except Exception as e:
+        print(f"Erro na transação do BD: {e}")
+    else:
+        print("\nUsuário cadastrado com sucesso!")
+
+
+        
 
             
 # Tentativa de conexão com o banco de dados
@@ -283,7 +305,8 @@ while True:
           '\n1. Realizar cadastro'
           '\n2. Fazer login'
           '\n3. Apenas verificar vacinas'
-          '\n4. Sair')
+          '\n4. Inserir, excluir, alterar ou consultar vacinas'
+          '\n5. Sair')
     
     
     try:
@@ -297,7 +320,7 @@ while True:
 
         # Realizar cadastro
         case 1:
-            print('Só para não marcar erro')
+            cadastrar()
 
 
         # Fazer login
@@ -308,10 +331,19 @@ while True:
         #Apenas verificar vacinas
         case 3:
             ApenasVerificar()
+        
+        #CRUD
+
+        case 4:
+            if login():
+                SubMenu()
+            else:
+                print("Você precisa estar logado para acessar esta funcionalidade!")
+                continue
 
 
         #Sair
-        case 4:
+        case 5:
             print('\nFim de programa. Até a próxima!')
             break
 
