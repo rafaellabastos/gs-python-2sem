@@ -6,28 +6,36 @@ def inserir():
     """
     Função que insere os dados da vacina
     """
-    while True:
+    inserido = False
+    while not inserido:
         try:
             print("\n----- CADASTRAR STATUS DA VACINA -----\n")
 
             # Recebe os valores para cadastro
+            usuario = input("Digite o nome do usuário: ")
+            idVacina = int(input("Escolha um ID: "))
             statusVacina = input("Digite o status da vacina (sim ou não): ").lower()
             if (statusVacina) not in ["sim", "não"]:
                 raise ValueError("Digite apenas 'sim' ou 'não' para o status da vacina")
 
             # Monta a instrução SQL de cadastro em uma string
-            cadastro = f"""INSERT INTO VACINASUSUARIO (STATUSVACINA) VALUES ({statusVacina}) """
+            cadastro = f"""INSERT INTO VacinasUsuario (usuario, idVacina, statusVacina) VALUES (:usuario, :idVacina, :statusVacina) """
 
             # Executa e grava o registro na Tabela
-            cursor.execute(cadastro)
+            cursor.execute(cadastro, {"usuario": usuario, "idVacina": idVacina, "statusVacina": statusVacina})
             conn.commit()
 
-        except ValueError:
-            print("Digite apenas 'sim' ou 'não' para o status da vacina!")
-        except:
-            print("Erro na transação do BD")
+            inserido = True
+
+        except ValueError as ve:
+            print(f"Erro de valor: {ve}!")
+            conn.rollback()
+        except Exception as e:
+            print(f"Erro na transação do BD: {e}")
+            conn.rollback()
         else:
             print("\nDados GRAVADOS com sucesso.")
+            conn.commit()
 
 
 def excluir():
@@ -179,7 +187,8 @@ def ApenasVerificar():
 def cadastrar():
     UFS = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO']
     
-    while True:
+    cadastro = False
+    while not cadastro:
         try:
             print("\n----- CADASTRAR USUÁRIO -----\n")
 
@@ -209,11 +218,13 @@ def cadastrar():
             cursor.execute(cadastro)
             conn.commit()
 
+            cadastro = True
+
         except Exception as e:
             print(f"Erro na transação do BD: {e}")
         else:
             print("\nUsuário cadastrado com sucesso!")
-            continue
+            
         
             
 
@@ -250,8 +261,8 @@ def SubMenu():
     Depois que o usuário realiza login, ele pode ter acesso a sua caderneta
     """
     print('\nO que você gostaria de fazer na sua caderneta?'
-          '\n1. Inserir vacina'
-          '\n2. Excluir vacina'
+          '\n1. Inserir status da vacina'
+          '\n2. Excluir status da vacina'
           '\n3. Alterar informação'
           '\n4. Consultar vacinas'
           '\n5. Sair')
@@ -287,22 +298,25 @@ def SubMenu():
 
             
 # Tentativa de conexão com o banco de dados
-try:
-    usuario = input('Usuário: ')
-    senha = pwinput.pwinput('Senha: ')
+conexao = False
 
-    # Conexão com o banco de dados
-    conn = oracledb.connect(user=usuario, password=senha, host='oracle.fiap.com.br', port=1521, service_name='ORCL')
+while not conexao:
+    try:
+        usuario = input('Usuário: ')
+        senha = pwinput.pwinput('Senha: ')
     
-    # Criação do cursor
-    cursor = conn.cursor()
-except Exception as erro:
-    print(f'Erro ao conectar com o banco de dados: ', {erro})
-    conexao = False                                        
-
-else:
-    print('Conexão realizada com sucesso!')              
-    conexao = True                                            
+        # Conexão com o banco de dados
+        conn = oracledb.connect(user=usuario, password=senha, host='oracle.fiap.com.br', port=1521, service_name='ORCL')
+        
+        # Criação do cursor
+        cursor = conn.cursor()
+    except Exception as erro:
+        print(f'Erro ao conectar com o banco de dados: ', {erro})
+        conexao = False                                        
+    
+    else:
+        print('Conexão realizada com sucesso!')              
+        conexao = True                                            
 
 
 # Menu
@@ -331,8 +345,11 @@ while True:
 
         # Fazer login
         case 2:
-            login()
-            SubMenu()
+            if login():
+                SubMenu()
+            else:
+                print("Você precisa estar logado para acessar esta funcionalidade!")
+                continue
 
         #Apenas verificar vacinas
         case 3:
