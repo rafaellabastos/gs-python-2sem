@@ -213,6 +213,9 @@ def cadastrar():
             print(f"Erro na transação do BD: {e}")
         else:
             print("\nUsuário cadastrado com sucesso!")
+            continue
+        
+            
 
 
 def login():
@@ -325,7 +328,6 @@ while True:
         # Realizar cadastro
         case 1:
             cadastrar()
-            break
 
         # Fazer login
         case 2:
