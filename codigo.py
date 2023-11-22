@@ -8,7 +8,7 @@ def inserir():
     """
     while True:
         try:
-            print("\n----- CADASTRAR VACINA -----\n")
+            print("\n----- CADASTRAR STATUS DA VACINA -----\n")
 
             # Recebe os valores para cadastro
             statusVacina = input("Digite o status da vacina (sim ou não): ").lower()
@@ -35,7 +35,7 @@ def excluir():
     Função que exclui os dados de uma vacina
     """
     try:
-        print("----- EXCLUIR VACINA -----\n")
+        print("\n----- EXCLUIR STATUS DA VACINA -----\n")
 
         # ID da vacina que será excluído
         vac_id = int(input("Escolha um ID: ")) 
@@ -73,7 +73,7 @@ def alterar():
     Função que altera os dados de uma vacina
     """
     try:
-        print("----- ALTERAR INFORMAÇÕES -----\n")
+        print("\n----- ALTERAR INFORMAÇÕES -----\n")
 
         # ID da vacina que será alterado
         vac_id = int(input("Escolha um ID: "))
@@ -91,7 +91,6 @@ def alterar():
         if len(lista_dados) == 0:
             print(f"Não há uma vacina cadastrada com o ID = {vac_id}")
         else:
-            
             # Captura os novos dados
             novo_statusVacina = input("Digite o novo status da vacina: ").lower()
             if (novo_statusVacina) not in ["sim", "não"]:
@@ -108,7 +107,7 @@ def alterar():
             print("\nDados ATUALIZADOS com sucesso!")
     
     except ValueError:
-        print("Números não são aceitos.")
+        print("Informação incorreta!")
     except Exception:
         print("Erro na transação do BD")
 
@@ -118,7 +117,7 @@ def consultar():
     Função que permite o usuário verificar suas vacinas
     """
     try:
-        print("----- CONSULTAR VACINAS -----\n")
+        print("\n----- CONSULTAR VACINAS -----\n")
 
         # Monta a instrução SQL de consulta
         consulta = f"""SELECT * FROM VACINAS"""
@@ -182,10 +181,10 @@ def cadastrar():
     
     while True:
         try:
-            print("----- CADASTRAR USUÁRIO -----\n")
+            print("\n----- CADASTRAR USUÁRIO -----\n")
 
             # Recebe os valores para cadastro
-            usuario = input("Nome de usuário: ")
+            usuario = input("Usuário: ")
 
             nome = input("Nome completo: ")
             if not nome.replace (" ", "").isalpha():
@@ -259,9 +258,7 @@ def SubMenu():
     except ValueError:
         print('O valor deve ser um número inteiro')
 
-
     match opcaomenu:
-
         #Inserir vacina
         case 1:
             inserir()
@@ -280,7 +277,7 @@ def SubMenu():
         
         #Sair
         case 5:
-            print('\nFim de programa. Até a próxima!')  
+            print('\nVoltando ao menu!')  
 
         case _:
             print('Opção incorreta')
