@@ -2,7 +2,7 @@ import oracledb
 import pwinput
 import json
 from unidecode import unidecode
-#from tabulate import tabulate 
+from tabulate import tabulate 
 
 def inserir():
     """
