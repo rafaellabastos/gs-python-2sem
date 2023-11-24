@@ -1,7 +1,8 @@
 import oracledb
 import pwinput
 import json
-from tabulate import tabulate 
+from unidecode import unidecode
+#from tabulate import tabulate 
 
 def inserir():
     """
@@ -237,12 +238,15 @@ def cadastrar():
             
 # Variável que verifica se o usuário está logado
 logado = False
+usuario_logado = None
 
 def login():
     """
     Login do usuário para poder ter acesso as funcionalidades do sistema
     """
+    global usuario_logado
     global logado
+
     try:
         print("\nOlá, seja bem vindo ao ImunoCheck!" +
               "\nPor Favor faça o login para continuar:")
@@ -257,7 +261,8 @@ def login():
         if resposta:
             print("Logado com sucesso! Entrando...")
             logado = True
-            return {"usuario": usuario, "senha": senha}  # Retorna informações do usuário após o login bem-sucedido
+            usuario_logado = {"usuario": usuario, "senha": senha}
+            return usuario_logado   # Retorna informações do usuário após o login bem-sucedido
         else:
             print("Usuário e/ou senha incorretos! Tente novamente.")
     except:
@@ -314,8 +319,7 @@ def SubMenu(logado):
             print('Opção incorreta')
 
 
-def exportar_consultas():
-
+def exportar_consultas1():
     """
     Função que exporta as consultas em JSON
     """
@@ -326,88 +330,118 @@ def exportar_consultas():
         # Monta a instrução SQL de consulta
         consulta_nome_vacinas = """SELECT nomeVacina FROM Vacinas"""
         cursor.execute(consulta_nome_vacinas)
+        nomes_vacinas = cursor.fetchall()
 
         # Monta a instrução SQL de consulta
         consulta_funcao_vacina = """SELECT funcaoVacina FROM Vacinas"""
         cursor.execute(consulta_funcao_vacina)
+        funcoes_vacina = cursor.fetchall()
 
         # Monta a instrução SQL de consulta
         consulta_idade_tomar = """SELECT idadeAplicacao FROM Vacinas"""
         cursor.execute(consulta_idade_tomar)
+        idades_tomar = cursor.fetchall()
 
-        #Criação do dicionário para exportar em JSON
+        # Remove caracteres especiais usando unidecode
+        nomes_vacinas = [unidecode(nome[0]) for nome in nomes_vacinas]
+        funcoes_vacina = [unidecode(funcao[0]) for funcao in funcoes_vacina]
+        idades_tomar = [unidecode(idade[0]) for idade in idades_tomar]
+
+        # Criação do dicionário para exportar em JSON
         consultas_json = {
-            "Nome das Vacinas": [
-                "BCG",
-                "Hepatite B",
-                "Pentavalente",
-                "VIP/VOP",
-                "Pneumococica 10-valente",
-                "Meningococica C",
-                "Rotavirus",
-                "Triplice viral",
-                "Hepatite A",
-                "DTP",
-                "Varicela",
-                "Febre amarela",
-                "HPV",
-                "Hepatite B",
-                "Triplice viral",
-                "Triplice viral",
-                "Dupla adulto",
-                "Influenza"
-            ],
-            "Funcao da Vacina": [
-                "Tuberculose",
-                "Hepatite B",
-                "DTP, Hib e HBV",
-                "Poliomelite",
-                "Doencas pulmonares",
-                "Meningococo",
-                "Rotavirus",
-                "Sarampo, caxumba e rubeola",
-                "Hepatite A",
-                "Difteria, tetano, coqueluche",
-                "Catapora",
-                "Febre amarela",
-                "HPV",
-                "Hepatite B",
-                "Sarampo, caxumba e rubeola",
-                "Sarampo, caxumba e rubeola",
-                "Difteria e tetano",
-                "Gripe"
-            ],
-            "Idade para tomar": [
-                "Infancia",
-                "Infancia",
-                "Infancia",
-                "Infancia",
-                "Infancia",
-                "Infancia",
-                "Infancia",
-                "Infancia",
-                "Infancia",
-                "Infancia",
-                "Infancia",
-                "A partir dos 9 meses",
-                "Meninas: 9 anos de idade / Meninos: 11 anos de idade",
-                "Adolescencia",
-                "Adolescencia",
-                "Adulto",
-                "Adulto",
-                "Anual"
-            ]
+            "Nome das Vacinas": nomes_vacinas,
+            "Funcao da Vacina": funcoes_vacina,
+            "Idade para tomar": idades_tomar
         }
 
-        with open("consultas.json", "w") as arquivo_json:
-            json.dump(consultas_json, arquivo_json, indent=4)
+        with open("consultas.json", "w", encoding='utf-8') as arquivo_json:
+            json.dump(consultas_json, arquivo_json, indent=4, ensure_ascii=False)
 
-        print("Consultas exportadas para o arquivo 'arquivo.json' com sucesso!")
+        print("Consultas exportadas para o arquivo 'consultas.json' com sucesso!")
 
     except Exception as e:
         print(f"Erro na exportação das consultas para JSON: {e}")
 
-            
+
+def exportar_consultas2(usuario_logado):
+    """
+    Função que exporta o status da vacina do usuário logado para JSON
+    """
+
+    try:
+        print("\n----- EXPORTAR USUARIO E STATUS DE VACINA PARA JSON -----\n")
+
+        # Monta a instrução SQL de consulta
+        consulta_status_vacina = f"""SELECT statusVacina FROM VacinasUsuario WHERE usuario = '{usuario_logado}'"""
+        cursor.execute(consulta_status_vacina)
+
+        # Captura os dados de retorno da consulta
+        lista_dados = cursor.fetchall()
+
+        # Verifica se há vacinas cadastradas para o usuário
+        if len(lista_dados) == 0:
+            print(f"Não há status de vacina cadastrado para o usuário {usuario_logado}")
+        else:
+            # Modifica o status para "nao" se for "não"
+            status_vacina_list = [status[0] if status[0].lower() == "não" else status[0] for status in lista_dados]
+
+            # Remove caracteres especiais usando unidecode
+            status_vacina_list = [unidecode(status) for status in status_vacina_list]
+
+            # Cria um dicionário para exportar em JSON
+            status_json = {
+                "usuario": usuario_logado,
+                "status_vacina": status_vacina_list
+            }
+
+            # Exporta o dicionário para JSON
+            with open(f"status_{usuario_logado}.json", "w", encoding='utf-8') as arquivo_json:
+                json.dump(status_json, arquivo_json, indent=4, ensure_ascii=False)
+
+            print(f"Status de vacina do usuário {usuario_logado} exportado para o arquivo 'status_{usuario_logado}.json' com sucesso!")
+
+    except Exception as e:
+        print(f"Erro na exportação do status de vacina para JSON: {e}")
+
+
+def exportar_consultas3(usuario_logado):
+    """
+    Função que exporta informações do usuário para JSON
+    """
+
+    try:
+        print("\n----- EXPORTAR INFORMAÇÕES DO USUÁRIO PARA JSON -----\n")
+
+        # Monta a instrução SQL de consulta
+        consulta_dados_usuario = f"""SELECT nomeCompleto, idade, estado FROM CADASTRO WHERE usuario = '{usuario_logado}'"""
+        cursor.execute(consulta_dados_usuario)
+
+        # Captura os dados de retorno da consulta
+        dados_usuario = cursor.fetchone()
+
+        # Verifica se há dados cadastrados para o usuário
+        if dados_usuario:
+            # Cria um dicionário para exportar em JSON
+            dados_usuario_json = {
+                "usuario": usuario_logado,
+                "nomeCompleto": dados_usuario[0],
+                "idade": dados_usuario[1],
+                "estado": dados_usuario[2]
+            }
+
+            # Exporta o dicionário para JSON
+            with open(f"dados_usuario_{usuario_logado}.json", "w", encoding='utf-8') as arquivo_json:
+                json.dump(dados_usuario_json, arquivo_json, indent=4, ensure_ascii=False)
+
+            print(f"Informações do usuário {usuario_logado} exportadas para o arquivo 'dados_usuario_{usuario_logado}.json' com sucesso!")
+
+        else:
+            print(f"Não há informações cadastradas para o usuário {usuario_logado}")
+
+    except Exception as e:
+        print(f"Erro na exportação das informações do usuário para JSON: {e}")
+
+
 # Tentativa de conexão com o banco de dados
 conexao = False
 
@@ -440,8 +474,10 @@ while True:
           '\n2. Fazer login'
           '\n3. Apenas verificar vacinas'
           '\n4. Manipular caderneta'
-          '\n5. Exportar consultas JSON'
-          '\n6. Sair')
+          '\n5. Exportar JSON (nome das vacinas, função e idade para tomar)'
+          '\n6. Exportar JSON (usuário e status de vacina)'
+          '\n7. Exportar JSON (informações do usuário)'
+          '\n8. Sair')
     
     try:
         opcaomenu = int(input('\nSelecione uma das opções acima: '))
@@ -472,10 +508,24 @@ while True:
 
         #Exportar consultas JSON
         case 5:
-            exportar_consultas()
+            exportar_consultas1()
+
+        #Exportar consultas JSON
+        case 6:
+            if logado:
+                exportar_consultas2(usuario_logado["usuario"])
+            else:
+                print("Você precisa estar logado para acessar esta funcionalidade!")
+
+        #Exportar consultas JSON
+        case 7:
+            if logado:
+                exportar_consultas3(usuario_logado["usuario"])
+            else:
+                print("Você precisa estar logado para acessar esta funcionalidade!")
             
         #Sair
-        case 6:
+        case 8:
             print('\nFim de programa. Até a próxima!')
             break
 
