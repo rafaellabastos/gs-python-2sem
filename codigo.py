@@ -1,7 +1,7 @@
 import oracledb
 import pwinput
 import json
-#from tabulate import tabulate 
+from tabulate import tabulate 
 
 def inserir():
     """
@@ -220,7 +220,7 @@ def cadastrar():
 
             # Monta a instrução SQL de cadastro em uma string
             cadastro = f"""INSERT INTO CADASTRO (usuario, nomeCompleto, idade, estado, senha) 
-                           VALUES ('{usuario}', '{nome}', '{idade}', '{estado}', '{senha}')"""
+                           VALUES (:usuario, :nome, :idade, :estado, :senha)"""
 
             # Executa e grava o registro na Tabela
             cursor.execute(cadastro, {"usuario": usuario, "nome": nome, "idade": idade, "estado": estado, "senha": senha})
@@ -235,13 +235,14 @@ def cadastrar():
             
         
             
-
+# Variável que verifica se o usuário está logado
+logado = False
 
 def login():
     """
     Login do usuário para poder ter acesso as funcionalidades do sistema
     """
-    logado = False
+    global logado
     try:
         print("\nOlá, seja bem vindo ao ImunoCheck!" +
               "\nPor Favor faça o login para continuar:")
@@ -249,25 +250,31 @@ def login():
         usuario = input("\nDigite o seu usuário: ")
         senha = input("Digite sua senha: ")
 
-        verificacao = f"""SELECT * FROM CADASTRO WHERE usuario = '{usuario}' AND senha = '{senha}' """
-        cursor.execute(verificacao)
+        verificacao = f"""SELECT * FROM CADASTRO WHERE usuario = :usuario AND senha = :senha """
+        cursor.execute(verificacao, {"usuario": usuario, "senha": senha})
         resposta = cursor.fetchall()
-        print(resposta)
         
         if resposta:
             print("Logado com sucesso! Entrando...")
             logado = True
+            return {"usuario": usuario, "senha": senha}  # Retorna informações do usuário após o login bem-sucedido
         else:
             print("Usuário e/ou senha incorretos! Tente novamente.")
     except:
         print("Erro na transação do BD.")
-    return logado, 
+
+    return None
 
 
-def SubMenu():
+def SubMenu(logado):
     """
     Depois que o usuário realiza login, ele pode ter acesso a sua caderneta
     """
+
+    if not logado:
+        print("Você precisa estar logado para acessar esta funcionalidade!")
+        return
+    
     print('\nO que você gostaria de fazer na sua caderneta?'
           '\n1. Inserir status da vacina'
           '\n2. Excluir status da vacina'
@@ -450,11 +457,7 @@ while True:
 
         # Fazer login
         case 2:
-            if login():
-                SubMenu()
-            else:
-                print("Você precisa estar logado para acessar esta funcionalidade!")
-            continue
+            login()
 
         #Apenas verificar vacinas
         case 3:
@@ -462,8 +465,8 @@ while True:
         
         #CRUD
         case 4:
-            if login():
-                SubMenu()
+            if logado:
+                SubMenu(logado)
             else:
                 print("Você precisa estar logado para acessar esta funcionalidade!")
 
